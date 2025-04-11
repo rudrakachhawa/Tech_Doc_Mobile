@@ -1,6 +1,12 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react'
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import CollectionsList from '../components/collectionsList';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ChatBot from 'chatbot-react-native-sdk';
+
+
+
 
 const HomeScreen = () => (
     <View><Text>Home Screen</Text></View>
@@ -9,16 +15,33 @@ const SettingsScreen = () => (
     <View><Text>Settings Screen</Text></View>
 );
 
-console.log("firstrttt")
+
 const Drawer = createDrawerNavigator();
 const AppNavigator = () => {
 
-    console.log("first")
     return (
-        <Drawer.Navigator initialRouteName="Home">
-            <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Settings" component={SettingsScreen} />
-        </Drawer.Navigator>
+        <View style={{ flex: 1 }}>
+            <Drawer.Navigator
+                initialRouteName="Home"
+                drawerContent={() => <CollectionsList />}
+                defaultStatus="open"
+            >
+                <Drawer.Screen name="Home" component={HomeScreen} />
+                <Drawer.Screen name="Settings" component={SettingsScreen} />
+            </Drawer.Navigator>
+
+            <ChatBot
+                embedToken={"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdfaWQiOiIxNTE4IiwiY2hhdGJvdF9pZCI6IjY2YjVjOTQ5ODEzNTkxNTczMzA2Mjc2OCIsInVzZXJfaWQiOiJydWRyYSJ9.ipmfmQpj4QJn49y7NmJhHCH-oKXJbNJjBSPaVA7jb_Q"}
+                threadId="RudraBot"
+                bridgeName="RudraBot"
+                variables={{}}
+                openInContainer={false}
+                hideIcon={false}
+                defaultOpen={false}
+                hideCloseButton={false}
+            />
+        </View>
     );
 };
+
 export default AppNavigator

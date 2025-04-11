@@ -14,7 +14,8 @@ export const customFetchBaseQuery = (
             const token = state.userInfo.proxyAuthToken
 
             // if (token) {
-            headers.set('proxy_auth_token', 'dEt0WnNYdVUzQmNsd1hJRUtmdzczNWdmMHB2NlhjU1AvdVBUN21peTFrWkxJd1FQUTZCNmZaTC91L2o0RFRJRXJEbjV6SmlWNnNPVTJQRTRiVGNWWER5VEFCMm54NkxGa0pMenRFVVd1N3hWdm5HaW51c1Vvc0tHVWpLMzU0QXYzVzNCYi9SeitYMEVES1R2N3h5UkhaMncvdHY0T3RORHZadlZOV0pEdnA4PQ==');
+            headers.set('Proxy_auth_token', 'S1craVkrQkxYOWVseXFTTWF6R1VVejJuS2o4V3BaSGxuaVIveFo1bWF1ZlQ2eUhLa1JWKzE1VWcvY1V3UERsODgwcklSaDNJUHlYZFhyTW53b2Fka3lkN3VSelZOYVltZVBKZHZ2TkN0NXRzMXZ1UURocHBQZXA2N3k2QXZraFp4MjNTcldpTXJXTmhROGh2c0tmL29WS0FGTEpzQXp2Q2ZDYU9BeElvcmhZPQ==');
+            // headers.set('techdoc_auth', 'S1craVkrQkxYOWVseXFTTWF6R1VVejJuS2o4V3BaSGxuaVIveFo1bWF1ZlQ2eUhLa1JWKzE1VWcvY1V3UERsODgwcklSaDNJUHlYZFhyTW53b2Fka3lkN3VSelZOYVltZVBKZHZ2TkN0NXRzMXZ1UURocHBQZXA2N3k2QXZraFp4MjNTcldpTXJXTmhROGh2c0tmL29WS0FGTEpzQXp2Q2ZDYU9BeElvcmhZPQ==');
             // }
 
             return headers;
