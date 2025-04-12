@@ -12,8 +12,8 @@ export default function SelectWorkspace() {
     const dispatch = useAppDispatch();
     const { data, isLoading } = useGetUserQuery();
 
-    const handleOrgSelect = (orgId: string) => {
-        dispatch(setUserInfo({ currentOrgId: orgId }));
+    const handleOrgSelect = (org: any) => {
+        dispatch(setUserInfo({ currentOrgId: org?.id, currentOrgData: org }));
     };
 
     if (isLoading) {
@@ -28,7 +28,7 @@ export default function SelectWorkspace() {
         <View style={styles.container}>
             <ScrollView>
                 {data?.orgs?.map((org) => (
-                    <TouchableOpacity key={org.id} style={styles.card} onPress={() => handleOrgSelect(org.id)}>
+                    <TouchableOpacity key={org.id} style={styles.card} onPress={() => handleOrgSelect(org)}>
                         <Text style={styles.orgName}>{org.name}</Text>
                     </TouchableOpacity>
                 ))}

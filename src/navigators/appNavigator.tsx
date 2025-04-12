@@ -4,6 +4,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import CollectionsList from '../components/collectionsList';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ChatBot from 'chatbot-react-native-sdk';
+import { useAppSelector } from '../hooks/hooks';
+import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
+import PageHtmlRenderer from '../components/pageHtmlRenderer';
 
 
 
@@ -11,23 +14,23 @@ import ChatBot from 'chatbot-react-native-sdk';
 const HomeScreen = () => (
     <View><Text>Home Screen</Text></View>
 );
-const SettingsScreen = () => (
-    <View><Text>Settings Screen</Text></View>
-);
 
 
 const Drawer = createDrawerNavigator();
 const AppNavigator = () => {
-
+    // const { currentPageId, currentOrgId } = useAppSelector(state => ({
+    //     currentPageId: state.userInfo.currentPageId,
+    //     currentOrgId: state.userInfo.currentOrgId
+    // }))
+    // console.log(currentPageId, 123123123)
+    // const { data } = useGetAllCollectionsQuery(currentOrgId)
     return (
         <View style={{ flex: 1 }}>
             <Drawer.Navigator
-                initialRouteName="Home"
                 drawerContent={() => <CollectionsList />}
                 defaultStatus="open"
             >
-                <Drawer.Screen name="Home" component={HomeScreen} />
-                <Drawer.Screen name="Settings" component={SettingsScreen} />
+                <Drawer.Screen name={"Select a Page"} component={PageHtmlRenderer} />
             </Drawer.Navigator>
 
             <ChatBot

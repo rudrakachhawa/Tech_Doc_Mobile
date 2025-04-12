@@ -10,8 +10,6 @@ const LoginScreen = () => {
         getUserDetails();
     };
 
-    console.log(error, data)
-
     return (
         <View>
             <Button title="Login" onPress={handleLogin} />

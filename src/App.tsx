@@ -9,7 +9,6 @@ import NavigationWrapper from './navigators/navigationWrapper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const App = () => {
-  console.log("ttttttttt")
   return (
     <SafeAreaProvider>
       <Provider store={store}>

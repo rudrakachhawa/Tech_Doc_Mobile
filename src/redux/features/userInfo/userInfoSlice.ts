@@ -7,7 +7,10 @@ const initialState: $UserInfoReducerType = {
     id: '',
     name: '',
     proxyAuthToken: '',
-    currentOrgId: ''
+    currentOrgId: '',
+    currentOrgData: {},
+    currentPageId: "",
+    orgs: []
 };
 
 const userSlice = createSlice({

@@ -25,9 +25,9 @@ export const collectionsApi = createApi({
                         }).map((item) => item.id)
                         updatedData?.[collectionId]?.forEach((parentPageId) => {
                             let versionId = pagesJson[parentPageId].child[0]
-                            updatedData[parentPageId] = pagesJson[versionId]?.child // this are the subpageIds
+                            updatedData[parentPageId] = pagesJson[versionId]?.child.filter((subPageId) => pagesJson[subPageId]?.type !== 4)
                             function updateSubPages(subPageId: string) {
-                                updatedData[subPageId] = pagesJson[subPageId]?.child
+                                updatedData[subPageId] = pagesJson[subPageId]?.child.filter((subPageId) => pagesJson[subPageId]?.type !== 4)
                                 updatedData[subPageId]?.forEach((childId) => {
                                     updateSubPages(childId)
                                 })

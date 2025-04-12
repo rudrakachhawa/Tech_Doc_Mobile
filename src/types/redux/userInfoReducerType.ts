@@ -8,4 +8,6 @@ export interface User {
 export interface $UserInfoReducerType extends User {
     currentOrgId: string
     proxyAuthToken: string
+    currentOrgData: Record<string, unknown>
+    currentPageId: string
 }

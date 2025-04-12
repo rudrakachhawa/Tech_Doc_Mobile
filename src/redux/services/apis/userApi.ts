@@ -33,7 +33,6 @@ export const userApi = createApi({
                     const { data } = await queryFulfilled;
                     dispatch(setUserInfo(data));
                 } catch (err) {
-                    console.log(err, 123)
                     console.error('Failed to fetch user info:', err);
                 }
             },

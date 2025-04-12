@@ -4,6 +4,7 @@ import { persistStore } from 'redux-persist';
 import { userApi } from './services/apis/userApi';
 import persistedReducer from './rootReducers';
 import { collectionsApi } from './services/apis/collectionsApi';
+import { pagesApi } from './services/apis/pagesApi';
 
 export const store = configureStore({
     reducer: persistedReducer,
@@ -12,7 +13,8 @@ export const store = configureStore({
             serializableCheck: false, // ✅ prevents function warnings
         }).concat(
             userApi.middleware,
-            collectionsApi.middleware
+            collectionsApi.middleware,
+            pagesApi.middleware
         ),
 });
 
