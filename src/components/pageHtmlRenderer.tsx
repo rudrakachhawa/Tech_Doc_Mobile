@@ -24,7 +24,7 @@ function PageHtmlRenderer({ route, navigation }: Props) {
     const { data: pageHtmlData, error, isLoading } = useGetPageHtmlQuery(pageId);
     const { data: pageData } = useGetAllCollectionsQuery(currentOrgId);
     const { width } = useWindowDimensions();
-
+    console.log(pageHtmlData?.html)
     const pageName = pageData?.pagesJson?.[pageId]?.name || 'No page selected';
     const subPages: string[] = pageData?.steps?.[pageId] || [];
 

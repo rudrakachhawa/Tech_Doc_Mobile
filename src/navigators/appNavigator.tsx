@@ -5,12 +5,14 @@ import CollectionsList from '../components/collectionsList';
 import ChatBot from 'chatbot-react-native-sdk';
 import PageHtmlRenderer from '../components/pageHtmlRenderer';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import { useAppSelector } from '../hooks/hooks';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
-
+    const { currentOrgId } = useAppSelector((state) => ({
+        currentOrgId: state.userInfo.currentOrgId,
+    }));
     return (
         <View style={{ flex: 1 }}>
             <Stack.Navigator>
@@ -19,9 +21,9 @@ const AppNavigator = () => {
             </Stack.Navigator>
 
             <ChatBot
-                embedToken={"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdfaWQiOiIxNTE4IiwiY2hhdGJvdF9pZCI6IjY2YjVjOTQ5ODEzNTkxNTczMzA2Mjc2OCIsInVzZXJfaWQiOiJydWRyYSJ9.ipmfmQpj4QJn49y7NmJhHCH-oKXJbNJjBSPaVA7jb_Q"}
-                threadId="RudraBot"
-                bridgeName="RudraBot"
+                embedToken={"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdfaWQiOiI1OTgyIiwiY2hhdGJvdF9pZCI6IjY2NTQ3OWE4YmQ1MDQxYWU5M2ZjZDNjNSIsInVzZXJfaWQiOiIxMjQifQ.aI4h6OmkVvQP5dyiSNdtKpA4Z1TVNdlKjAe5D8XCrew"}
+                threadId={currentOrgId}
+                bridgeName="techdoc_internal_chatbot"
                 variables={{}}
                 openInContainer={false}
                 hideIcon={false}
