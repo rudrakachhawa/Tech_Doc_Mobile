@@ -10,4 +10,5 @@ export interface $UserInfoReducerType extends User {
     proxyAuthToken: string
     currentOrgData: Record<string, unknown>
     currentPageId: string
+    currentCollectionId: string
 }

@@ -1,11 +1,11 @@
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import CollectionsList from '../components/collectionsList';
 import ChatBot from 'chatbot-react-native-sdk';
 import PageHtmlRenderer from '../components/pageHtmlRenderer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useAppSelector } from '../hooks/hooks';
+import AllPages from '../screens/allPages';
+import AllCollections from '../screens/allCollection';
 
 const Stack = createStackNavigator();
 
@@ -16,7 +16,8 @@ const AppNavigator = () => {
     return (
         <View style={{ flex: 1 }}>
             <Stack.Navigator>
-                <Stack.Screen name={"CollectionsList"} component={CollectionsList} options={{ headerShown: false }} />
+                <Stack.Screen name={"CollectionsList"} component={AllCollections} options={{ headerShown: false }} />
+                <Stack.Screen name={"PageList"} component={AllPages} options={{ headerShown: true }} />
                 <Stack.Screen name={"PageDetail"} component={PageHtmlRenderer} options={{ headerShown: true }} />
             </Stack.Navigator>
 

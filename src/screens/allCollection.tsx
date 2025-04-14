@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { List } from 'react-native-paper';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useNavigation } from '@react-navigation/native';
 
-function CollectionsList() {
+function AllCollections() {
     const { currentOrgData, currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
         currentOrgData: state.userInfo.currentOrgData,
@@ -19,10 +18,10 @@ function CollectionsList() {
         dispatch(setUserInfo({ currentOrgId: null }));
     }, [dispatch]);
 
-    const navigateToPageDetails = useCallback(
-        (pageId: string) => {
-            if (pageId) {
-                navigation.navigate('PageDetail', { pageId });
+    const navigateToAllPages = useCallback(
+        (collectionId: string) => {
+            if (collectionId) {
+                navigation.navigate('PageList', { collectionId });
             }
         },
         [dispatch, navigation]
@@ -60,34 +59,20 @@ function CollectionsList() {
     const renderCollections = () => (
         <ScrollView style={{ flex: 1 }}>
             {renderOrgHeader()}
-            {data?.steps?.root?.map((collectionId: string) => {
-                const collection = data?.collectionJson[collectionId];
-                const childPages = data?.steps[collectionId] ?? [];
-
-                return (
-                    <View key={collectionId}>
-                        <List.Accordion
-                            title={<Text style={styles.collectionTitle}>{collection.name}</Text>}
-                            style={styles.accordionStyle}
+            <View style={{ padding: 16 }}>
+                {data?.steps?.root?.map((collectionId: string) => {
+                    const collection = data?.collectionJson[collectionId];
+                    return (
+                        <TouchableOpacity
+                            key={collectionId}
+                            style={styles.card}
+                            onPress={() => navigateToAllPages(collectionId)}
                         >
-                            {childPages.length > 0 ? (
-                                childPages.map((pageId: string) => (
-                                    <List.Item
-                                        key={pageId}
-                                        title={<Text style={styles.pageTitle}>{data?.pagesJson[pageId]?.name}</Text>}
-                                        onPress={() => navigateToPageDetails(pageId)}
-                                        style={styles.pageItemStyle}
-                                    />
-                                ))
-                            ) : (
-                                <View style={styles.noPagesContainer}>
-                                    <Text style={styles.noPagesText}>No Pages Present</Text>
-                                </View>
-                            )}
-                        </List.Accordion>
-                    </View>
-                );
-            })}
+                            <Text style={styles.collectionTitle}>{collection.name}</Text>
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
         </ScrollView>
     );
 
@@ -98,7 +83,7 @@ function CollectionsList() {
     );
 }
 
-const styles = {
+const styles = StyleSheet.create({
     centeredContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -122,6 +107,7 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 16,
+        paddingBottom: 0,
     },
     orgButton: {
         width: 37,
@@ -146,34 +132,20 @@ const styles = {
         fontSize: 16,
         color: '#333',
     },
-    accordionStyle: {
-        backgroundColor: '#f9f9f9',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
-        paddingVertical: 8,
+    card: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 12,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
     },
-    pageTitle: {
-        fontSize: 16,
-        color: '#333',
-    },
-    pageItemStyle: {
-        marginLeft: 20,
-        backgroundColor: '#ffffff',
-        borderLeftWidth: 2.5,
-        borderLeftColor: '#007acc',
-        paddingVertical: 10,
-    },
-    noPagesContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 20,
-        backgroundColor: '#ffffff',
-    },
-    noPagesText: {
-        fontSize: 16,
-        color: '#999',
-    },
-};
+});
 
-export default CollectionsList;
+export default AllCollections;

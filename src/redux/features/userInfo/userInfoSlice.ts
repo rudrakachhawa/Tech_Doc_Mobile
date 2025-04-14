@@ -10,6 +10,7 @@ const initialState: $UserInfoReducerType = {
     currentOrgId: '',
     currentOrgData: {},
     currentPageId: "",
+    currentCollectionId: "",
     orgs: []
 };
 

@@ -7,7 +7,7 @@ import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { TouchableOpacity, Text } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 
-export default function SelectWorkspace() {
+export default function AllWorkspace() {
 
     const dispatch = useAppDispatch();
     const { data, isLoading } = useGetUserQuery();
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     },
     orgName: {
         fontSize: 18,
-        fontWeight: '600',
         color: '#333'
     },
     orgId: {

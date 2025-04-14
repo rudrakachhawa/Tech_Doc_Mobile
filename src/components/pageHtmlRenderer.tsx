@@ -3,7 +3,8 @@ import {
     View,
     ScrollView,
     Text,
-    useWindowDimensions
+    useWindowDimensions,
+    TouchableOpacity
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import RenderHTML from 'react-native-render-html';
@@ -24,52 +25,14 @@ function PageHtmlRenderer({ route, navigation }: Props) {
     const { data: pageHtmlData, error, isLoading } = useGetPageHtmlQuery(pageId);
     const { data: pageData } = useGetAllCollectionsQuery(currentOrgId);
     const { width } = useWindowDimensions();
-    console.log(pageHtmlData?.html)
     const pageName = pageData?.pagesJson?.[pageId]?.name || 'No page selected';
     const subPages: string[] = pageData?.steps?.[pageId] || [];
 
-    const [menuVisible, setMenuVisible] = useState(false);
-    const menuAnchorRef = useRef<View>(null);
-
-    const openMenu = () => setMenuVisible(true);
-    const closeMenu = () => setMenuVisible(false);
-
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: pageName,
-            headerRight: () =>
-                subPages.length > 0 ? (
-                    <View ref={menuAnchorRef}>
-                        <Menu
-                            visible={menuVisible}
-                            onDismiss={closeMenu}
-                            anchor={
-                                <IconButton
-                                    icon="file-document-outline"
-                                    onPress={openMenu}
-                                    size={24}
-                                    iconColor="#333"
-                                />
-                            }
-                            anchorPosition="bottom"
-                        >
-                            {subPages.map((subPageId: string) => (
-                                <Menu.Item
-                                    key={subPageId}
-                                    onPress={() => {
-                                        closeMenu();
-                                        if (subPageId !== pageId) {
-                                            navigation.push('PageDetail', { pageId: subPageId });
-                                        }
-                                    }}
-                                    title={pageData?.pagesJson?.[subPageId]?.name || 'Untitled'}
-                                />
-                            ))}
-                        </Menu>
-                    </View>
-                ) : null,
+            title: pageName
         });
-    }, [navigation, menuVisible, pageName, subPages, pageData]);
+    }, [navigation]);
 
     return (
         <View style={{ flex: 1 }}>
@@ -89,6 +52,23 @@ function PageHtmlRenderer({ route, navigation }: Props) {
                         contentWidth={width}
                         source={{ html: pageHtmlData?.html || '' }}
                     />
+                    {subPages.length > 0 && (
+                        <View style={{ marginTop: 20, marginBottom: 100 }}>
+                            <Text style={{ fontSize: 20, color: '#333', fontWeight: 'bold', marginBottom: 8 }}>Sub Pages :</Text>
+                            <View style={{ paddingLeft: 16 }}>
+                                {subPages.map((subPageId: string, index: number) => (
+                                    <Text
+                                        key={subPageId}
+                                        style={{ fontSize: 16, color: '#0000ff', marginBottom: 4, marginRight: 8, textDecorationLine: 'underline' }}
+                                        onPress={() => navigation.push('PageDetail', { pageId: subPageId })}
+                                    >
+                                        {index + 1}. {pageData?.pagesJson?.[subPageId]?.name || 'Untitled'}
+                                        {index < subPages.length - 1 ? ',' : ''}
+                                    </Text>
+                                ))}
+                            </View>
+                        </View>
+                    )}
                 </ScrollView>
             )}
         </View>
