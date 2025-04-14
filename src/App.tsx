@@ -7,6 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './redux/store';
 import NavigationWrapper from './navigators/navigationWrapper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PaperProvider } from 'react-native-paper';
 
 const App = () => {
   return (
@@ -14,7 +15,9 @@ const App = () => {
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <GestureHandlerRootView>
-            <NavigationWrapper />
+            <PaperProvider>
+              <NavigationWrapper />
+            </PaperProvider>
           </GestureHandlerRootView>
         </PersistGate>
       </Provider>

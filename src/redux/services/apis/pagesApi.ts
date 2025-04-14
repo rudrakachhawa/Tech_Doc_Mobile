@@ -6,7 +6,7 @@ export const pagesApi = createApi({
     reducerPath: 'pagesApi',
     baseQuery: customFetchBaseQuery('https://doc-rtc-369544787296.asia-south1.run.app/content/4343'),
     endpoints: (builder) => ({
-        getPageHtml: builder.query<{ steps: { [key: string]: string[] }, collectionJson: { [collectionId: string]: { id: string, name: string, description: string, rootParentId: string } }, pagesJson: { [pageId: string]: { type: number, collectionId: string, id: string, child: string[], name: string, description: string } } }, string>({
+        getPageHtml: builder.query<{ html: string }, string>({
             query: (pageId) => ({
                 url: '',
                 method: 'POST',
