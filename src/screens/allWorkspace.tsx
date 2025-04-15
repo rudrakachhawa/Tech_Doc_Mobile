@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { RefreshControl, ScrollView, View } from 'react-native'
 import { StyleSheet } from 'react-native';
 import { useGetUserQuery } from '../redux/services/apis/userApi';
 import { useAppDispatch } from '../hooks/hooks';
@@ -10,7 +10,7 @@ import { ActivityIndicator } from 'react-native';
 export default function AllWorkspace() {
 
     const dispatch = useAppDispatch();
-    const { data, isLoading } = useGetUserQuery();
+    const { data, isLoading, isFetching, refetch } = useGetUserQuery();
 
     const handleOrgSelect = (org: any) => {
         dispatch(setUserInfo({ currentOrgId: org?.id, currentOrgData: org }));
@@ -26,7 +26,7 @@ export default function AllWorkspace() {
 
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
                 {data?.orgs?.map((org) => (
                     <TouchableOpacity key={org.id} style={styles.card} onPress={() => handleOrgSelect(org)}>
                         <Text style={styles.orgName}>{org.name}</Text>

@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
@@ -15,7 +15,7 @@ function CollectionsList({ route, navigation }: Props) {
         currentOrgId: state.userInfo.currentOrgId,
     }));
     const dispatch = useAppDispatch();
-    const { data, error, isLoading } = useGetAllCollectionsQuery(currentOrgId);
+    const { data, error, isLoading, isFetching, refetch } = useGetAllCollectionsQuery(currentOrgId);
     const collectionName = data?.collectionJson?.[collectionId]?.name || 'No page selected';
 
     useLayoutEffect(() => {
@@ -49,7 +49,7 @@ function CollectionsList({ route, navigation }: Props) {
 
 
     const renderAllPages = () => (
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />} >
             <View style={{ padding: 16 }}>
                 {data?.steps?.[collectionId]?.map((pageId: string) => {
                     const collection = data?.pagesJson[pageId];

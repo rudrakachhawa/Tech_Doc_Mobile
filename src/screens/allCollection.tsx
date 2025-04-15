@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
@@ -12,7 +12,7 @@ function AllCollections() {
     }));
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
-    const { data, error, isLoading } = useGetAllCollectionsQuery(currentOrgId);
+    const { data, error, isLoading, isFetching, refetch } = useGetAllCollectionsQuery(currentOrgId);
 
     const switchOrg = useCallback(() => {
         dispatch(setUserInfo({ currentOrgId: null }));
@@ -57,7 +57,7 @@ function AllCollections() {
     );
 
     const renderCollections = () => (
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
             {renderOrgHeader()}
             <View style={{ padding: 16 }}>
                 {data?.steps?.root?.map((collectionId: string) => {

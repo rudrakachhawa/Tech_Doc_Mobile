@@ -4,7 +4,8 @@ import {
     ScrollView,
     Text,
     useWindowDimensions,
-    TouchableOpacity
+    TouchableOpacity,
+    RefreshControl
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import RenderHTML from 'react-native-render-html';
@@ -22,7 +23,7 @@ function PageHtmlRenderer({ route, navigation }: Props) {
         currentOrgId: state.userInfo.currentOrgId,
     }));
 
-    const { data: pageHtmlData, error, isLoading } = useGetPageHtmlQuery(pageId);
+    const { data: pageHtmlData, error, isLoading, isFetching, refetch } = useGetPageHtmlQuery(pageId);
     const { data: pageData } = useGetAllCollectionsQuery(currentOrgId);
     const { width } = useWindowDimensions();
     const pageName = pageData?.pagesJson?.[pageId]?.name || 'No page selected';
@@ -47,7 +48,7 @@ function PageHtmlRenderer({ route, navigation }: Props) {
                     </Text>
                 </View>
             ) : (
-                <ScrollView style={{ flex: 1, padding: 16 }}>
+                <ScrollView style={{ flex: 1, padding: 16 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
                     <RenderHTML
                         contentWidth={width}
                         source={{ html: pageHtmlData?.html || '' }}
