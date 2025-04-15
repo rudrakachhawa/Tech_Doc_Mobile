@@ -37,7 +37,14 @@ export const userApi = createApi({
                 }
             },
         }),
+        switchWorkspace: builder.mutation<void, string>({
+            query: (workspaceId) => ({
+                url: '/switchCompany',
+                method: 'POST',
+                body: { company_ref_id: workspaceId }
+            })
+        })
     }),
 });
 
-export const { useGetUserQuery, useLazyGetUserQuery } = userApi;
+export const { useGetUserQuery, useLazyGetUserQuery, useSwitchWorkspaceMutation } = userApi;
