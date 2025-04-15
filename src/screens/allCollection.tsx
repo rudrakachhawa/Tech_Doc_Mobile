@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
@@ -56,25 +56,34 @@ function AllCollections() {
         </View>
     );
 
-    const renderCollections = () => (
-        <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
-            {renderOrgHeader()}
-            <View style={{ padding: 16 }}>
-                {data?.steps?.root?.map((collectionId: string) => {
-                    const collection = data?.collectionJson[collectionId];
-                    return (
+    const renderCollections = () => {
+        const collections = data?.steps?.root?.map((collectionId: string) => ({
+            id: collectionId,
+            ...data?.collectionJson[collectionId],
+        })) || [];
+
+        return (
+            <View style={{ flex: 1 }}>
+                {renderOrgHeader()}
+                <FlatList
+                    data={collections}
+                    keyExtractor={(item) => item.id}
+                    refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+                    contentContainerStyle={styles.listContentContainer}
+                    renderItem={({ item }) => (
                         <TouchableOpacity
-                            key={collectionId}
                             style={styles.card}
-                            onPress={() => navigateToAllPages(collectionId)}
+                            onPress={() => navigateToAllPages(item.id)}
                         >
-                            <Text style={styles.collectionTitle}>{collection.name}</Text>
+                            <Text style={styles.collectionTitle}>{item.name}</Text>
                         </TouchableOpacity>
-                    );
-                })}
+                    )}
+                    ListEmptyComponent={<Text style={styles.collectionTitle}>No collections found.</Text>}
+                />
             </View>
-        </ScrollView>
-    );
+        );
+    };
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -146,6 +155,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
     },
+    listContentContainer: {
+        padding: 16,
+    },
+
 });
 
 export default AllCollections;

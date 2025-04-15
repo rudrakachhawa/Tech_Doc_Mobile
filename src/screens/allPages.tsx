@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
@@ -48,24 +48,30 @@ function CollectionsList({ route, navigation }: Props) {
     );
 
 
-    const renderAllPages = () => (
-        <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />} >
-            <View style={{ padding: 16 }}>
-                {data?.steps?.[collectionId]?.map((pageId: string) => {
-                    const collection = data?.pagesJson[pageId];
-                    return (
-                        <TouchableOpacity
-                            key={pageId}
-                            style={styles.card}
-                            onPress={() => navigateToPageDetails(pageId)}
-                        >
-                            <Text style={styles.collectionTitle}>{collection?.name}</Text>
-                        </TouchableOpacity>
-                    );
-                })}
-            </View>
-        </ScrollView>
-    );
+    const renderAllPages = () => {
+        const pages = data?.steps?.[collectionId]?.map((pageId: string) => ({
+            id: pageId,
+            ...data?.pagesJson?.[pageId],
+        })) || [];
+
+        return (
+            <FlatList
+                data={pages}
+                keyExtractor={(item) => item.id}
+                refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+                contentContainerStyle={{ padding: 16 }}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        style={styles.card}
+                        onPress={() => navigateToPageDetails(item.id)}
+                    >
+                        <Text style={styles.collectionTitle}>{item.name || 'Untitled Page'}</Text>
+                    </TouchableOpacity>
+                )}
+                ListEmptyComponent={<Text style={styles.collectionTitle}>No pages found.</Text>}
+            />
+        );
+    };
 
     return (
         <View style={{ flex: 1 }}>
