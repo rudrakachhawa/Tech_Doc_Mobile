@@ -8,7 +8,7 @@ export const collectionsApi = createApi({
     reducerPath: 'collectionsApi',
     baseQuery: customFetchBaseQuery('https://proxy.viasocket.com/proxy/api/1258584/27fspgb25/orgs'),
     endpoints: (builder) => ({
-        getAllCollections: builder.query<{ steps: { [key: string]: string[] }, collectionJson: { [collectionId: string]: { id: string, name: string, description: string, rootParentId: string } }, pagesJson: { [pageId: string]: { type: number, collectionId: string, id: string, child: string[], name: string, description: string } } }, string>({
+        getAllCollections: builder.query<{ steps: { [key: string]: string[] }, collectionJson: { [collectionId: string]: { id: string, name: string, description: string, rootParentId: string } }, pagesJson: { [pageId: string]: { type: number, collectionId: string, id: string, child: string[], name: string, description: string, parentId: string } } }, string>({
             query: (orgId) => `/${orgId}/getSideBarData`,
             transformResponse: (response: { data: any }) => {
                 function gg(data: { collections: Record<string, { id: string, name: string, description: string, rootParentId: string }>, pages: Record<string, { type: number, collectionId: string, id: string, child: string[], name: string, description: string }> }) {
@@ -47,8 +47,8 @@ export const collectionsApi = createApi({
                     }, {});
 
                     const filteredPages = Object.keys(pagesJson).reduce((acc, key) => {
-                        const { id, name, description } = pagesJson[key];
-                        acc[key] = { id, name, description };
+                        const { id, name, description, parentId, collectionId } = pagesJson[key];
+                        acc[key] = { id, name, description, parentId, collectionId };
                         return acc;
                     }, {});
 
