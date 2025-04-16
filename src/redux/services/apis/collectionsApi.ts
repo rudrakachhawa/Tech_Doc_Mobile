@@ -1,8 +1,6 @@
 // src/api/collectionsApi.ts
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { customFetchBaseQuery } from './rtkQueryInterceptor';
-import { User } from '../../../types/redux/userInfoReducerType';
-import { setUserInfo } from '../../features/userInfo/userInfoSlice';
 
 export const collectionsApi = createApi({
     reducerPath: 'collectionsApi',

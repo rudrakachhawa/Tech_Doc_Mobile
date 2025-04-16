@@ -9,7 +9,7 @@ import { pagesApi } from './services/apis/pagesApi';
 const persistConfig = {
     key: 'root',
     storage: mmkvStorage,
-    whitelist: ['userInfo']
+    whitelist: ['userInfo', 'userApi', 'collectionsApi']
 };
 
 const rootReducer = combineReducers({

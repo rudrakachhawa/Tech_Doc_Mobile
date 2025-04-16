@@ -1,10 +1,8 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useLayoutEffect } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList, DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
-import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigators/navigationTypes';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PageList'>;
