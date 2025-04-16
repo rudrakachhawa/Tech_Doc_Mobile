@@ -1,5 +1,5 @@
-import React, { useCallback, useLayoutEffect } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList } from 'react-native';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList, DeviceEventEmitter } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
@@ -23,6 +23,38 @@ function CollectionsList({ route, navigation }: Props) {
             title: collectionName
         });
     }, [navigation]);
+
+    useEffect(() => {
+        DeviceEventEmitter.emit('SendDataToChatbot', {
+            type: 'SendDataToChatbot',
+            data: {
+                variables: {
+                    orgId: currentOrgId,
+                    collectionId: collectionId,
+                    collectionName: collectionName,
+                    allCollections: Object.values(data?.collectionJson || {})?.map((item) => {
+                        return {
+                            id: item?.id,
+                            name: item?.name
+                        }
+                    })
+                }
+            }
+        });
+
+        return () => {
+            DeviceEventEmitter.emit('SendDataToChatbot', {
+                type: 'SendDataToChatbot',
+                data: {
+                    variables: {
+                        orgId: currentOrgId,
+                        collectionId: null,
+                        collectionName: null
+                    }
+                }
+            });
+        };
+    }, [currentOrgId, collectionId, collectionName]);
 
     const navigateToPageDetails = useCallback(
         (pageId: string) => {

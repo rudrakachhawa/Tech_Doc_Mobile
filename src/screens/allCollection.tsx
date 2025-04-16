@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList, DeviceEventEmitter } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
@@ -13,6 +13,36 @@ function AllCollections() {
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
     const { data, error, isLoading, isFetching, refetch } = useGetAllCollectionsQuery(currentOrgId);
+
+
+    useEffect(() => {
+        DeviceEventEmitter.emit('SendDataToChatbot', {
+            type: 'SendDataToChatbot',
+            data: {
+                variables: {
+                    orgId: currentOrgId,
+                    allCollections: Object.values(data?.collectionJson || {})?.map((item) => {
+                        return {
+                            id: item?.id,
+                            name: item?.name
+                        }
+                    })
+                }
+            }
+        });
+
+        return () => {
+            DeviceEventEmitter.emit('SendDataToChatbot', {
+                type: 'SendDataToChatbot',
+                data: {
+                    variables: {
+                        orgId: currentOrgId,
+                        allCollections: []
+                    }
+                }
+            });
+        };
+    }, [currentOrgId]);
 
     const switchOrg = useCallback(() => {
         dispatch(setUserInfo({ currentOrgId: null }));
@@ -63,12 +93,11 @@ function AllCollections() {
         })) || [];
 
         return (
-            <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
                 {renderOrgHeader()}
                 <FlatList
                     data={collections}
                     keyExtractor={(item) => item.id}
-                    refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
                     contentContainerStyle={styles.listContentContainer}
                     renderItem={({ item }) => (
                         <TouchableOpacity
@@ -80,7 +109,7 @@ function AllCollections() {
                     )}
                     ListEmptyComponent={<Text style={styles.collectionTitle}>No collections found.</Text>}
                 />
-            </View>
+            </ScrollView>
         );
     };
 

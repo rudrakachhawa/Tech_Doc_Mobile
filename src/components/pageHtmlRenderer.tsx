@@ -1,19 +1,18 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useEffect, useLayoutEffect } from 'react';
 import {
-    View,
+    DeviceEventEmitter,
+    RefreshControl,
     ScrollView,
     Text,
     useWindowDimensions,
-    TouchableOpacity,
-    RefreshControl
+    View
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import RenderHTML from 'react-native-render-html';
+import HTMLView from 'react-native-htmlview';
 import { useAppSelector } from '../hooks/hooks';
-import { useGetPageHtmlQuery } from '../redux/services/apis/pagesApi';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
+import { useGetPageHtmlQuery } from '../redux/services/apis/pagesApi';
 import { RootStackParamList } from '../types/navigators/navigationTypes';
-import { Menu, IconButton } from 'react-native-paper';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PageDetail'>;
 
@@ -35,8 +34,41 @@ function PageHtmlRenderer({ route, navigation }: Props) {
         });
     }, [navigation]);
 
+    useEffect(() => {
+        DeviceEventEmitter.emit('SendDataToChatbot', {
+            type: 'SendDataToChatbot',
+            data: {
+                variables: {
+                    orgId: currentOrgId,
+                    pageId: pageId,
+                    pageName: pageName,
+                    allPages: Object.values(pageData?.pagesJson || {})?.map((item) => {
+                        return {
+                            id: item.id,
+                            name: item.name
+                        }
+                    })
+                }
+            }
+        });
+
+        return () => {
+            DeviceEventEmitter.emit('SendDataToChatbot', {
+                type: 'SendDataToChatbot',
+                data: {
+                    variables: {
+                        orgId: currentOrgId,
+                        pageId: null,
+                        pageName: null,
+                        allPages: []
+                    }
+                }
+            });
+        };
+    }, [currentOrgId, pageId, pageName]);
+
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingBottom: 80 }}>
             {isLoading ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontSize: 18, color: '#4682b4' }}>Loading...</Text>
@@ -49,9 +81,8 @@ function PageHtmlRenderer({ route, navigation }: Props) {
                 </View>
             ) : (
                 <ScrollView style={{ flex: 1, padding: 16 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
-                    <RenderHTML
-                        contentWidth={width}
-                        source={{ html: pageHtmlData?.html || '' }}
+                    <HTMLView
+                        value={pageHtmlData?.html || ''}
                     />
                     {subPages.length > 0 && (
                         <View style={{ marginTop: 20, marginBottom: 100 }}>
