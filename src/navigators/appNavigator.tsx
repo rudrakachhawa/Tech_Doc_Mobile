@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import ChatBot from 'chatbot-react-native-sdk';
-import PageHtmlRenderer from '../components/pageHtmlRenderer';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAppSelector } from '../hooks/hooks';
-import AllPages from '../screens/allPages';
-import AllCollections from '../screens/allCollection';
+import ChatBot from 'chatbot-react-native-sdk';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import PageHtmlRenderer from '../components/pageHtmlRenderer';
 import SearchOverlay from '../components/searchOverlay';
+import { useAppSelector } from '../hooks/hooks';
+import AllCollections from '../screens/allCollection';
+import AllPages from '../screens/allPages';
+import { withSafeArea } from '../hoc/safeAreaHoc';
 
 const Stack = createStackNavigator();
 

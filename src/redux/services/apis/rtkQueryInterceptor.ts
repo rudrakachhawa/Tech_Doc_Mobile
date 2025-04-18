@@ -14,8 +14,8 @@ export const customFetchBaseQuery = (
             const token = state.userInfo.proxyAuthToken
 
             // if (token) {
-            headers.set('Proxy_auth_token', 'S1craVkrQkxYOWVseXFTTWF6R1VVejJuS2o4V3BaSGxuaVIveFo1bWF1ZlQ2eUhLa1JWKzE1VWcvY1V3UERsODgwcklSaDNJUHlYZFhyTW53b2Fka3lkN3VSelZOYVltZVBKZHZ2TkN0NXRzMXZ1UURocHBQZXA2N3k2QXZraFp4MjNTcldpTXJXTmhROGh2c0tmL29WS0FGTEpzQXp2Q2ZDYU9BeElvcmhZPQ==');
-            // headers.set('techdoc_auth', 'S1craVkrQkxYOWVseXFTTWF6R1VVejJuS2o4V3BaSGxuaVIveFo1bWF1ZlQ2eUhLa1JWKzE1VWcvY1V3UERsODgwcklSaDNJUHlYZFhyTW53b2Fka3lkN3VSelZOYVltZVBKZHZ2TkN0NXRzMXZ1UURocHBQZXA2N3k2QXZraFp4MjNTcldpTXJXTmhROGh2c0tmL29WS0FGTEpzQXp2Q2ZDYU9BeElvcmhZPQ==');
+            headers.set('Proxy_auth_token', 'Smg0YnIreXJ5bUZhNFlldDB3WkQyUlRJVTIvWHNlVkpGUFZRNU9UNGZpdXpRS3RCYlFBelB0TFVORjRpUk9IeUhuZG91aWo5d1lrR1V2R0ZBZGJFWEtMZ1FCa250MXBJOTg5SUJGLzkrVVdlRFdsenN2SDRLbEc4anBqQko1MmV6THNUTUdiWnhVRnJsMG9MQVpLa3Ivd0tzNzZ1NkhrWEtqZW9VUGlqcC9vPQ==');
+            // headers.set('techdoc_auth', 'Smg0YnIreXJ5bUZhNFlldDB3WkQyUlRJVTIvWHNlVkpGUFZRNU9UNGZpdXpRS3RCYlFBelB0TFVORjRpUk9IeUhuZG91aWo5d1lrR1V2R0ZBZGJFWEtMZ1FCa250MXBJOTg5SUJGLzkrVVdlRFdsenN2SDRLbEc4anBqQko1MmV6THNUTUdiWnhVRnJsMG9MQVpLa3Ivd0tzNzZ1NkhrWEtqZW9VUGlqcC9vPQ==');
             // }
 
             return headers;

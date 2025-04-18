@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
-import { ScrollView, Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList, DeviceEventEmitter } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList, DeviceEventEmitter } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function AllCollections() {
     const { currentOrgData, currentOrgId } = useAppSelector((state) => ({
@@ -13,7 +14,6 @@ function AllCollections() {
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
     const { data, error, isLoading, isFetching, refetch } = useGetAllCollectionsQuery(currentOrgId);
-
 
     useEffect(() => {
         DeviceEventEmitter.emit('SendDataToChatbot', {
@@ -91,10 +91,9 @@ function AllCollections() {
             id: collectionId,
             ...data?.collectionJson[collectionId],
         })) || [];
-
+    
         return (
-            <ScrollView style={{ flex: 1 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
-                {renderOrgHeader()}
+            <SafeAreaView style={{ flex: 1 }}>
                 <FlatList
                     data={collections}
                     keyExtractor={(item) => item.id}
@@ -107,11 +106,14 @@ function AllCollections() {
                             <Text style={styles.collectionTitle}>{item.name}</Text>
                         </TouchableOpacity>
                     )}
+                    ListHeaderComponent={renderOrgHeader}
                     ListEmptyComponent={<Text style={styles.collectionTitle}>No collections found.</Text>}
+                    refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
                 />
-            </ScrollView>
+            </SafeAreaView>
         );
     };
+    
 
 
     return (
@@ -144,8 +146,7 @@ const styles = StyleSheet.create({
     orgHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        paddingBottom: 0,
+        paddingBottom: 10,
     },
     orgButton: {
         width: 37,

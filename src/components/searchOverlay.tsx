@@ -4,6 +4,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { useAppSelector } from '../hooks/hooks';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 
@@ -57,7 +58,7 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
     };
 
     return (
-        <View style={styles.overlay}>
+        <SafeAreaView style={styles.overlay}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={onClose}>
                     <MaterialIcons name="arrow-back" size={28} color="#333" />
@@ -95,7 +96,7 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
                     onScrollBeginDrag={Keyboard.dismiss}
                 />
             )}
-        </View>
+        </SafeAreaView>
     );
 };
 
