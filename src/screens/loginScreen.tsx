@@ -1,12 +1,15 @@
 // LoginScreen.tsx
 import React from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { useLazyGetUserQuery } from '../redux/services/apis/userApi';
-import {ShowGoogleLoginButton} from 'react-native-proxy'
+import { ShowGoogleLoginButton } from 'react-native-proxy'
+import { setProxyAuthToken } from '../redux/features/userInfo/userInfoSlice';
+import { useAppDispatch } from '../hooks/hooks';
 
 
 const LoginScreen = () => {
     const [getUserDetails, { data, isLoading, error }] = useLazyGetUserQuery();
+    const dispatch = useAppDispatch();
 
     const handleLogin = async () => {
         getUserDetails();
@@ -16,10 +19,11 @@ const LoginScreen = () => {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             {/* <Button title="Login" onPress={handleLogin} /> */}
             {isLoading && <Text>Loading user info...</Text>}
-            <ShowGoogleLoginButton referenceId="870623a1697443499652ceeab330e5" onLoginSuccess={(data)=>{
+            <ShowGoogleLoginButton config={{}}  referenceId='1258584g170245213365795ba5a63ab' onLoginSuccess={(data) => {
                 console.log(data)
-            }} onLoginFailure={(data)=>{
-                console.log("Login failed",data)
+                dispatch(setProxyAuthToken(data.proxy_auth_token))
+            }} onLoginFailure={(data) => {
+                console.log("Login failed", data)
             }} />
         </View>
     );

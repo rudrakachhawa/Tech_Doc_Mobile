@@ -24,9 +24,12 @@ const userSlice = createSlice({
                 ...action.payload
             };
         },
+        setProxyAuthToken: (state, action: PayloadAction<string>) => {
+            state.proxyAuthToken = action.payload
+        },
         clearUserInfo: () => ({}),
     },
 });
 
-export const { setUserInfo, clearUserInfo } = userSlice.actions;
+export const { setUserInfo, clearUserInfo, setProxyAuthToken } = userSlice.actions;
 export default userSlice.reducer;
