@@ -9,12 +9,12 @@ export const collectionsApi = createApi({
         getAllCollections: builder.query<{ steps: { [key: string]: string[] }, collectionJson: { [collectionId: string]: { id: string, name: string, description: string, rootParentId: string } }, pagesJson: { [pageId: string]: { type: number, collectionId: string, id: string, child: string[], name: string, description: string, parentId: string } } }, string>({
             query: (orgId) => `/${orgId}/getSideBarData`,
             transformResponse: (response: { data: any }) => {
-                function gg(data: { collections: Record<string, { id: string, name: string, description: string, rootParentId: string }>, pages: Record<string, { type: number, collectionId: string, id: string, child: string[], name: string, description: string }> }) {
+                function createPayloadForCollection(data: { collections: Record<string, { id: string, name: string, description: string, rootParentId: string }>, pages: Record<string, { type: number, collectionId: string, id: string, child: string[], name: string, description: string }> }) {
                     let updatedData: Record<string, string[]> = {
                         root: []
                     }
-                    let collections = data.collections
-                    let pagesJson = data.pages
+                    let collections = data.collections || {}
+                    let pagesJson = data.pages || {}
                     let pages = Object.values(pagesJson)
                     updatedData.root = Object.keys(collections)
                     updatedData.root.forEach((collectionId) => {
@@ -53,7 +53,7 @@ export const collectionsApi = createApi({
                     return { steps: updatedData, collectionJson: filteredCollections, pagesJson: filteredPages }
 
                 }
-                return gg(response)
+                return createPayloadForCollection(response)
             }
         }),
     }),
