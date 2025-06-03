@@ -1,8 +1,9 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { useAppSelector } from '../hooks/hooks';
 import AuthNavigator from './authNavigator';
 import AppNavigator from './appNavigator';
+import useColorScheme from '../components/components/useColorScheme';
 
 const NavigationWrapper = () => {
     const userInfo = useAppSelector((state) => state.userInfo);

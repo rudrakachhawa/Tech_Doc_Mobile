@@ -1,8 +1,12 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, RefreshControl, StyleSheet } from 'react-native';
 import { useAppDispatch } from '../hooks/hooks';
 import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useGetUserQuery, useSwitchWorkspaceMutation } from '../redux/services/apis/userApi';
+import View from '../components/components/View';
+import Text from '../components/components/Text';
+import TouchableOpacity from '../components/components/TouchableOpacity';
+import FlatList from '../components/components/FlatList';
 
 export default function AllWorkspace() {
     const dispatch = useAppDispatch();
@@ -24,12 +28,11 @@ export default function AllWorkspace() {
 
     return (
         <FlatList
-            contentContainerStyle={styles.container}
             data={data?.orgs || []}
             keyExtractor={(item) => item.id}
             refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
             renderItem={({ item }) => (
-                <TouchableOpacity style={styles.card} onPress={() => handleOrgSelect(item)}>
+                <TouchableOpacity onPress={() => handleOrgSelect(item)}>
                     <Text style={styles.orgName}>{item.name}</Text>
                 </TouchableOpacity>
             )}
@@ -46,37 +49,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: '#f5f5f5'
-    },
-    card: {
-        backgroundColor: 'white',
-        borderRadius: 8,
-        padding: 16,
-        marginBottom: 12,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-    },
     orgName: {
         fontSize: 18,
-        color: '#333'
     },
     orgId: {
         marginTop: 4,
         fontSize: 12,
-        color: '#666'
     },
     emptyText: {
         fontSize: 16,
-        color: '#999',
         textAlign: 'center',
         marginTop: 20,
     }

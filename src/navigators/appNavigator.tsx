@@ -1,30 +1,40 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import ChatBot from 'chatbot-react-native-sdk';
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { StyleSheet } from 'react-native';
 import PageHtmlRenderer from '../components/pageHtmlRenderer';
 import SearchOverlay from '../components/searchOverlay';
 import { useAppSelector } from '../hooks/hooks';
 import AllCollections from '../screens/allCollection';
 import AllPages from '../screens/allPages';
-import { withSafeArea } from '../hoc/safeAreaHoc';
+import View from '../components/components/View';
+import useColorScheme from '../components/components/useColorScheme';
+import AppNavigatorHeader from '../components/headers/appNavigatorHeader';
+import TouchableOpacity from '../components/components/TouchableOpacity';
+import MaterialIcons from '../components/components/MaterialIcons';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
     const [showSearch, setShowSearch] = useState(false);
-
+    const themeColors = useColorScheme();
     const { currentOrgId } = useAppSelector((state) => ({
         currentOrgId: state.userInfo.currentOrgId,
     }));
-
     return (
-        <View style={{ flex: 1 }}>
-            <Stack.Navigator>
-                <Stack.Screen name="CollectionsList" component={AllCollections} options={{ headerShown: false }} />
-                <Stack.Screen name="PageList" component={AllPages} options={{ headerShown: true }} />
-                <Stack.Screen name="PageDetail" component={PageHtmlRenderer} options={{ headerShown: true }} />
+        <View isPrimary style={{ flex: 1 }}>
+            <Stack.Navigator screenOptions={{
+                headerShown: true,
+                headerStyle: {
+                    backgroundColor: themeColors.primary,
+                    height: 80,
+                },
+                headerTitle: (props) => (<AppNavigatorHeader {...props} />),
+                headerLeft: () => null
+            }}>
+                <Stack.Screen name="MyCollections" component={AllCollections} />
+                <Stack.Screen name="PageList" component={AllPages} />
+                <Stack.Screen name="PageDetail" component={PageHtmlRenderer} />
             </Stack.Navigator>
 
             <ChatBot
@@ -38,11 +48,8 @@ const AppNavigator = () => {
                 hideCloseButton={false}
             />
 
-            <TouchableOpacity
-                style={styles.floatingButton}
-                onPress={() => setShowSearch(true)}
-            >
-                <MaterialIcons name="search" size={22} color="#fff" />
+            <TouchableOpacity   style={styles.floatingButton}onPress={() => setShowSearch(true)}>
+                <MaterialIcons name="search" size={22} />
             </TouchableOpacity>
 
             {showSearch && (
@@ -59,7 +66,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 80,
         right: 20,
-        backgroundColor: '#007AFF',
         borderRadius: 30,
         width: 50,
         height: 50,
@@ -67,5 +73,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         elevation: 5,
         zIndex: 5,
+        padding:0
     },
 });

@@ -1,9 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useLayoutEffect } from 'react';
-import { DeviceEventEmitter, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { DeviceEventEmitter, RefreshControl, StyleSheet,  } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { RootStackParamList } from '../types/navigators/navigationTypes';
+import View from '../components/components/View';
+import Text from '../components/components/Text';
+import FlatList from '../components/components/FlatList';
+import TouchableOpacity from '../components/components/TouchableOpacity';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PageList'>;
 
@@ -64,14 +68,14 @@ function CollectionsList({ route, navigation }: Props) {
     );
 
     const renderLoading = () => (
-        <View style={styles.centeredContainer}>
-            <Text style={styles.loadingText}>Loading...</Text>
+        <View >
+            <Text>Loading...</Text>
         </View>
     );
 
     const renderError = () => (
-        <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>
+        <View >
+            <Text>
                 We encountered an issue. Please restart the app and try again.
             </Text>
         </View>
@@ -92,13 +96,15 @@ function CollectionsList({ route, navigation }: Props) {
                 contentContainerStyle={{ padding: 16 }}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        style={styles.card}
                         onPress={() => navigateToPageDetails(item.id)}
                     >
-                        <Text style={styles.collectionTitle}>{item.name || 'Untitled Page'}</Text>
+                        <Text>{item.name || 'Untitled Page'}</Text>
                     </TouchableOpacity>
                 )}
-                ListEmptyComponent={<Text style={styles.collectionTitle}>No pages found.</Text>}
+                ListEmptyComponent={<Text>No pages found.</Text>}
+                ListHeaderComponent={
+                    <View isPrimary style={{paddingVertical:10}}><Text>Pages</Text></View>
+                }
             />
         );
     };

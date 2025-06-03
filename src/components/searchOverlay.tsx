@@ -5,6 +5,10 @@ import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi
 import { useAppSelector } from '../hooks/hooks';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { transformToNestedStructure } from '../utils';
+import NestedListForSearchedPage from './nestedListForSearchedPage';
+import ScrollView from './components/ScrollView';
+import Separator from './components/Seperator';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,48 +35,9 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
             item?.name?.toLowerCase().includes(query?.toLowerCase())
         );
 
-
-    const renderItem = ({ item }: { item: { name: string, id: string, collectionId: string } | undefined }) => {
-        const getParentNames = (id: string | null): string => {
-            if (!id) return '';
-            const parent = data?.pagesJson?.[id];
-            if (!parent) return '';
-            return parent.parentId ? `${getParentNames(parent.parentId)}> ${parent.name}  ` : '';
-        };
-        const collectionName = data?.collectionJson?.[item?.collectionId]?.name ?? '';
-        const parentNames = getParentNames(item?.id ?? '');
-
-        const handlePress = () => {
-            if (item?.id) {
-                navigation.navigate('PageDetail', { pageId: item.id });
-                onClose();
-            }
-        };
-
-        return (
-            <TouchableOpacity style={styles.card} onPress={handlePress}>
-                <Text style={styles.cardTitle}>{item?.name}</Text>
-                {collectionName ? <Text style={styles.cardSubtitle}>{collectionName} {parentNames}</Text> : null}
-            </TouchableOpacity>
-        );
-    };
-
     return (
         <SafeAreaView style={styles.overlay}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={onClose}>
-                    <MaterialIcons name="arrow-back" size={28} color="#333" />
-                </TouchableOpacity>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Search Page"
-                    placeholderTextColor="#999"
-                    value={query}
-                    onChangeText={setQuery}
-                    autoFocus
-                />
-            </View>
-
+            <ScrollView style={{padding:0}}>
             {isLoading ? (
                 <View style={styles.centeredContainer}>
                     <Text style={styles.loadingText}>Loading...</Text>
@@ -88,14 +53,22 @@ const SearchOverlay = ({ onClose }: { onClose: () => void }) => {
                     <Text style={styles.errorText}>No Pages found</Text>
                 </View>
             ) : (
-                <FlatList
-                    data={filteredData}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={renderItem}
-                    contentContainerStyle={{ paddingBottom: 40 }}
-                    onScrollBeginDrag={Keyboard.dismiss}
-                />
+                <NestedListForSearchedPage onClose={onClose} items={transformToNestedStructure(filteredData, data)} space='' />
             )}
+            </ScrollView>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={onClose}>
+                    <MaterialIcons name="arrow-back" size={28} color="#333" />
+                </TouchableOpacity>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search Page"
+                    placeholderTextColor="#999"
+                    value={query}
+                    onChangeText={setQuery}
+                    autoFocus
+                />
+            </View>
         </SafeAreaView>
     );
 };
@@ -105,19 +78,14 @@ export default SearchOverlay;
 const styles = StyleSheet.create({
     overlay: {
         position: 'absolute',
-        top: 0,
-        left: 0,
         width,
         height,
-        backgroundColor: '#fff',
         zIndex: 10,
-        paddingTop: 20,
         paddingHorizontal: 16,
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 16,
     },
     input: {
         flex: 1,

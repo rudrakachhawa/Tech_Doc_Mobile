@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
-import { Text, TouchableOpacity, View, StyleSheet, RefreshControl, FlatList, DeviceEventEmitter } from 'react-native';
+import {  StyleSheet, RefreshControl, DeviceEventEmitter } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
-import { setUserInfo } from '../redux/features/userInfo/userInfoSlice';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import View from '../components/components/View';
+import Text from '../components/components/Text';
+import FlatList from '../components/components/FlatList';
+import TouchableOpacity from '../components/components/TouchableOpacity';
 
 function AllCollections() {
     const { currentOrgData, currentOrgId } = useAppSelector((state) => ({
@@ -44,10 +46,6 @@ function AllCollections() {
         };
     }, [currentOrgId]);
 
-    const switchOrg = useCallback(() => {
-        dispatch(setUserInfo({ currentOrgId: null }));
-    }, [dispatch]);
-
     const navigateToAllPages = useCallback(
         (collectionId: string) => {
             if (collectionId) {
@@ -71,21 +69,6 @@ function AllCollections() {
         </View>
     );
 
-    const renderOrgHeader = () => (
-        <View style={styles.orgHeader}>
-            <TouchableOpacity onPress={switchOrg} style={styles.orgButton}>
-                <Text style={styles.orgButtonText}>
-                    {currentOrgData?.name
-                        ?.split(' ')
-                        .map((word: string) => word[0])
-                        .join('')
-                        .toUpperCase()}
-                </Text>
-            </TouchableOpacity>
-            <Text style={styles.orgNameText}>{currentOrgData?.name}</Text>
-        </View>
-    );
-
     const renderCollections = () => {
         const collections = data?.steps?.root?.map((collectionId: string) => ({
             id: collectionId,
@@ -93,24 +76,22 @@ function AllCollections() {
         })) || [];
     
         return (
-            <SafeAreaView style={{ flex: 1 }}>
                 <FlatList
                     data={collections}
                     keyExtractor={(item) => item.id}
-                    contentContainerStyle={styles.listContentContainer}
                     renderItem={({ item }) => (
                         <TouchableOpacity
-                            style={styles.card}
                             onPress={() => navigateToAllPages(item.id)}
                         >
-                            <Text style={styles.collectionTitle}>{item.name}</Text>
+                            <Text>{item.name}</Text>
                         </TouchableOpacity>
                     )}
-                    ListHeaderComponent={renderOrgHeader}
-                    ListEmptyComponent={<Text style={styles.collectionTitle}>No collections found.</Text>}
+                    ListHeaderComponent={
+                        <View isPrimary style={{paddingVertical:10}}><Text>Collections</Text></View>
+                    }
+                    ListEmptyComponent={<Text>No collections found.</Text>}
                     refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
                 />
-            </SafeAreaView>
         );
     };
     

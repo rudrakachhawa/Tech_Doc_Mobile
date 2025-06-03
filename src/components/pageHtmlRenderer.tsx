@@ -3,16 +3,18 @@ import React, { useEffect, useLayoutEffect } from 'react';
 import {
     DeviceEventEmitter,
     RefreshControl,
-    ScrollView,
-    Text,
     useWindowDimensions,
-    View
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
+import RenderHtml from 'react-native-render-html';
 import { useAppSelector } from '../hooks/hooks';
 import { useGetAllCollectionsQuery } from '../redux/services/apis/collectionsApi';
 import { useGetPageHtmlQuery } from '../redux/services/apis/pagesApi';
 import { RootStackParamList } from '../types/navigators/navigationTypes';
+import View from './components/View';
+import Text from './components/Text';
+import TouchableOpacity from './components/TouchableOpacity';
+import ScrollView from './components/ScrollView';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PageDetail'>;
 
@@ -23,8 +25,8 @@ function PageHtmlRenderer({ route, navigation }: Props) {
     }));
 
     const { data: pageHtmlData, error, isLoading, isFetching, refetch } = useGetPageHtmlQuery(pageId);
-    const { data: pageData } = useGetAllCollectionsQuery(currentOrgId);
     const { width } = useWindowDimensions();
+    const { data: pageData } = useGetAllCollectionsQuery(currentOrgId);
     const pageName = pageData?.pagesJson?.[pageId]?.name || 'No page selected';
     const subPages: string[] = pageData?.steps?.[pageId] || [];
 
@@ -66,9 +68,10 @@ function PageHtmlRenderer({ route, navigation }: Props) {
             });
         };
     }, [currentOrgId, pageId, pageName]);
+console.log(12345678,pageHtmlData?.html);
 
     return (
-        <View style={{ flex: 1, paddingBottom: 80 }}>
+        <View isPrimary style={{ flex: 1 }}>
             {isLoading ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontSize: 18, color: '#4682b4' }}>Loading...</Text>
@@ -80,23 +83,30 @@ function PageHtmlRenderer({ route, navigation }: Props) {
                     </Text>
                 </View>
             ) : (
-                <ScrollView style={{ flex: 1, padding: 16 }} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
-                    <HTMLView
-                        value={pageHtmlData?.html || ''}
-                    />
+                <ScrollView refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}>
+                    {pageHtmlData?.html?.trim() && <View style={{ backgroundColor: 'white' }}>
+                        <HTMLView
+                            value={pageHtmlData?.html || ''}
+                        />
+                    </View>}
+                    <Text>GG</Text>
+                    {pageHtmlData?.html?.trim() && <View>
+                        <RenderHtml
+                            source={{html:pageHtmlData?.html || ''}}
+                            contentWidth={width}
+                        />
+                    </View>}
                     {subPages.length > 0 && (
                         <View style={{ marginTop: 20, marginBottom: 100 }}>
-                            <Text style={{ fontSize: 20, color: '#333', fontWeight: 'bold', marginBottom: 8 }}>Sub Pages :</Text>
-                            <View style={{ paddingLeft: 16 }}>
+                            <Text>Sub Pages :</Text>
+                            <View >
                                 {subPages.map((subPageId: string, index: number) => (
-                                    <Text
-                                        key={subPageId}
-                                        style={{ fontSize: 16, color: '#0000ff', marginBottom: 4, marginRight: 8, textDecorationLine: 'underline' }}
+                                    <TouchableOpacity
+                                        key={index + subPageId}
                                         onPress={() => navigation.push('PageDetail', { pageId: subPageId })}
                                     >
-                                        {index + 1}. {pageData?.pagesJson?.[subPageId]?.name || 'Untitled'}
-                                        {index < subPages.length - 1 ? ',' : ''}
-                                    </Text>
+                                        <Text>{pageData?.pagesJson?.[subPageId]?.name || 'Untitled'}</Text>
+                                    </TouchableOpacity>
                                 ))}
                             </View>
                         </View>
