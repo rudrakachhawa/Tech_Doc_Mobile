@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useLazyGetUserQuery } from '../redux/services/apis/userApi';
-import { ShowGoogleLoginButton } from 'react-native-proxy'
+import { ShowProxyAuth } from '../react-native-proxy'
 import { setProxyAuthToken } from '../redux/features/userInfo/userInfoSlice';
 import { useAppDispatch } from '../hooks/hooks';
 
@@ -19,7 +19,7 @@ const LoginScreen = () => {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             {/* <Button title="Login" onPress={handleLogin} /> */}
             {isLoading && <Text>Loading user info...</Text>}
-            <ShowGoogleLoginButton config={{}}  referenceId='1258584g170245213365795ba5a63ab' onLoginSuccess={(data) => {
+            <ShowProxyAuth config={{}}  referenceId='870623e16972025236529415b2d54a' onLoginSuccess={(data) => {
                 console.log(data)
                 dispatch(setProxyAuthToken(data.proxy_auth_token))
             }} onLoginFailure={(data) => {
