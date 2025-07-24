@@ -13,19 +13,19 @@ export const collectionsApi = createApi({
                     let updatedData: Record<string, string[]> = {
                         root: []
                     }
-                    let collections = data.collections || {}
-                    let pagesJson = data.pages || {}
+                    let collections = data?.collections || {}
+                    let pagesJson = data?.pages || {}
                     let pages = Object.values(pagesJson)
                     updatedData.root = Object.keys(collections)
                     updatedData.root.forEach((collectionId) => {
                         updatedData[collectionId] = pages.filter((item) => {
-                            return item.collectionId === collectionId && item.type === 1
-                        }).map((item) => item.id)
+                            return item?.collectionId === collectionId && item?.type === 1
+                        }).map((item) => item?.id)
                         updatedData?.[collectionId]?.forEach((parentPageId) => {
-                            let versionId = pagesJson[parentPageId].child[0]
-                            updatedData[parentPageId] = pagesJson[versionId]?.child.filter((subPageId) => pagesJson[subPageId]?.type !== 4)
+                            let versionId = pagesJson?.[parentPageId]?.child?.[0]
+                            updatedData[parentPageId] = pagesJson?.[versionId]?.child?.filter((subPageId) => pagesJson?.[subPageId]?.type !== 4)
                             function updateSubPages(subPageId: string) {
-                                updatedData[subPageId] = pagesJson[subPageId]?.child.filter((subPageId) => pagesJson[subPageId]?.type !== 4)
+                                updatedData[subPageId] = pagesJson?.[subPageId]?.child?.filter((subPageId) => pagesJson?.[subPageId]?.type !== 4)
                                 updatedData[subPageId]?.forEach((childId) => {
                                     updateSubPages(childId)
                                 })
@@ -39,13 +39,13 @@ export const collectionsApi = createApi({
                     })
 
                     const filteredCollections = Object.keys(collections).reduce((acc, key) => {
-                        const { id, name, description, rootParentId } = collections[key];
+                        const { id, name, description, rootParentId } = collections[key] || {};
                         acc[key] = { id, name, description, rootParentId };
                         return acc;
                     }, {});
 
                     const filteredPages = Object.keys(pagesJson).reduce((acc, key) => {
-                        const { id, name, description, parentId, collectionId } = pagesJson[key];
+                        const { id, name, description, parentId, collectionId } = pagesJson[key] || {};
                         acc[key] = { id, name, description, parentId, collectionId };
                         return acc;
                     }, {});

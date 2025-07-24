@@ -19,7 +19,7 @@ const LoginScreen = () => {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             {/* <Button title="Login" onPress={handleLogin} /> */}
             {isLoading && <Text>Loading user info...</Text>}
-            <ShowProxyAuth config={{}}  referenceId='870623e16972025236529415b2d54a' onLoginSuccess={(data) => {
+            <ShowProxyAuth config={{}}  referenceId='1258584g170245213365795ba5a63ab' onLoginSuccess={(data) => {
                 console.log(data)
                 dispatch(setProxyAuthToken(data.proxy_auth_token))
             }} onLoginFailure={(data) => {

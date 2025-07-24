@@ -27,7 +27,7 @@ const userSlice = createSlice({
         setProxyAuthToken: (state, action: PayloadAction<string>) => {
             state.proxyAuthToken = action.payload
         },
-        clearUserInfo: () => ({}),
+        clearUserInfo: () => (initialState),
     },
 });
 

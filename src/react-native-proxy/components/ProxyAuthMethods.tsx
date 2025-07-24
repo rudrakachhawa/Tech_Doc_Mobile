@@ -5,9 +5,9 @@ import {
 import { FeatureApis } from '../apis/featureApis';
 import GoogleLoginButton from './GoogleLoginButton';
 import AppleLoginButton from './AppleLoginButton';
+import { GoogleFeatureType } from '../types/features';
 
 const ProxyAuth = ({
-    config = null,
     referenceId,
     onLoginSuccess,
     onLoginFailure,
@@ -25,7 +25,6 @@ const ProxyAuth = ({
     textStyle?: object;
     loadingColor?: string;
     disabled?: boolean;
-    config?: any
 }) => {
     const [loading, setLoading] = React.useState(false);
     const [featuresList, setFeaturesList] = useState([])
@@ -35,7 +34,7 @@ const ProxyAuth = ({
             async function getFeatures() {
                 const data = await FeatureApis.getFeatureList(referenceId)
                 setFeaturesList(data)
-                console.log(data,"-0-0-0-00-0-0-0-0-0")
+                console.log(data)
             }
             getFeatures()
         }
@@ -46,9 +45,8 @@ const ProxyAuth = ({
         <View style={{
             gap: 10
         }}>
-            {featuresList?.length && featuresList?.map((feature: { text: string ,urlLink:string }) => {
+            {featuresList?.length && featuresList?.map((feature: GoogleFeatureType, index: number) => {
                 const props = {
-                    config,
                     referenceId,
                     onLoginSuccess,
                     onLoginFailure,
@@ -58,15 +56,15 @@ const ProxyAuth = ({
                     loadingColor,
                     disabled,
                     loading,
-                    setLoading,
+                    setLoading, 
                     feature
                 }
                 switch (feature?.text) {
                     case 'Continue with Google':
-                        return <GoogleLoginButton {...props} />
+                        return <GoogleLoginButton key={`google-${index}`} {...props} />
 
                     case 'Continue with Apple':
-                        return <AppleLoginButton {...props} />
+                        return <AppleLoginButton key={`apple-${index}`} {...props} />
                     default:
                         return null
                 }

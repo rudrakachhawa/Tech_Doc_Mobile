@@ -17,7 +17,7 @@ const AppleLoginButton = ({
   buttonStyle?: object;
   feature: {
     text: string
-    urlLink:string
+    urlLink: string
   }
 }) => {
 
@@ -28,20 +28,15 @@ const AppleLoginButton = ({
           requestedOperation: appleAuth.Operation.LOGIN
         });
 
-        const { user ,identityToken , authorizationCode } = appleAuthRequestResponse;
+        const { identityToken, authorizationCode } = appleAuthRequestResponse;
         const state = feature?.urlLink?.split('state=')[1]?.split('&')[0];
 
-        console.log('state -0-0-0-0-',state)
-        console.log('identityToken -0-0-0-0-0-',identityToken)
-        console.log('user -0-0-0-0-0-',user)
-        console.log('code -0-0-',authorizationCode)
-        
         if (!identityToken) {
           throw new Error('Apple Sign-In failed - no identity token returned.');
         }
 
         // Optional: Make a proxy request like you do with Google, if needed
-        const proxyResponse = await FeatureApis.getProxyAuthToken(state, identityToken);
+        const proxyResponse = await FeatureApis.getProxyAuthTokenForAppleAuth(state, identityToken, authorizationCode || '');
 
         onLoginSuccess && onLoginSuccess(proxyResponse);
       }

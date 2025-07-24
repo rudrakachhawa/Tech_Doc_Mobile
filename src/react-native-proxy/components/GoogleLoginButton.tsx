@@ -1,8 +1,9 @@
 import React from 'react'
-import { ActivityIndicator, Image, TouchableOpacity, View, Text, StyleSheet } from 'react-native'
+import { ActivityIndicator, Image, TouchableOpacity, View, Text, StyleSheet, Platform } from 'react-native'
 import { FeatureApis } from '../apis/featureApis';
 import { configureGoogleSignIn } from '../services/providers/googleAuth';
 import { login } from '../services/authService';
+import { GoogleFeatureType } from '../types/features';
 
 interface PropsType {
     referenceId: string,
@@ -16,10 +17,7 @@ interface PropsType {
     config?: any;
     loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-    feature:{
-        text:string,
-        urlLink:string
-    }
+    feature: GoogleFeatureType
 }
 
 const GOOGLE_LOGO = 'https://developers.google.com/identity/images/g-logo.png';
@@ -31,10 +29,12 @@ export default function GoogleLoginButton(props: PropsType) {
         try {
             const webClientId = feature?.urlLink?.split('client_id=')[1]?.split('&')[0];
             const state = feature?.urlLink?.split('state=')[1]?.split('&')[0];
-            configureGoogleSignIn(config || { webClientId, offlineAccess: true });
+            const iosClientId = feature?.ios_client_id
+            const googleConfig = Platform.OS === 'ios' ? { iosClientId } : { webClientId, offlineAccess: true }
+            configureGoogleSignIn(googleConfig);
             setLoading(true);
             const googleLoginResult: any = await login('google');
-            const proxyResponse = await FeatureApis.getProxyAuthToken(state, googleLoginResult.accessToken)
+            const proxyResponse = await FeatureApis.getProxyAuthTokenForGoogleAuth(state, googleLoginResult.accessToken)
             onLoginSuccess && onLoginSuccess(proxyResponse);
         } catch (error: any) {
             console.error('Google login failed:', error);
